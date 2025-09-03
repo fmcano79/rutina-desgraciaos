@@ -1,0 +1,20 @@
+cat > manifest.json << 'EOF'
+{
+  "name": "RUTINA DESGRACIAOS",
+  "short_name": "DESGRACIAOS", 
+  "description": "Aplicación de rutina de gimnasio brutal",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icono-app.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ]
+}
+EOF
