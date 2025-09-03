@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RUTINA DESGRACIAOS</title>
+    <meta name="theme-color" content="#000000">
+    <link rel="icon" href="icono-app.png" type="image/png">
+    <link rel="apple-touch-icon" href="icono-app.png">
+    <link rel="manifest" href="manifest.json">
     <style>
         * {
             margin: 0;
@@ -36,30 +40,24 @@
         }
         
         .logo-container {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         
-        .logo-text {
-            background: linear-gradient(45deg, #333333, #666666, #999999);
-            border: 3px solid #444444;
-            border-radius: 15px;
-            padding: 20px;
-            display: inline-block;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
-        }
-        
-        .logo-main {
-            font-size: 1.8em;
-            font-weight: 900;
-            color: #ffffff;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-            letter-spacing: 3px;
-            margin: 0;
+        .logo-container img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            background: rgba(0, 0, 0, 0.2);
+            padding: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .header h1 {
             font-size: 2.2em;
             margin-bottom: 10px;
+            margin-top: 10px;
             color: #ffffff;
             font-weight: 900;
             letter-spacing: 2px;
