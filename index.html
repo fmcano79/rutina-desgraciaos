@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RUTINA DESGRACIAOS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #000000 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 10px;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo-container {
+            margin-bottom: 20px;
+        }
+        
+        .logo-text {
+            background: linear-gradient(45deg, #333333, #666666, #999999);
+            border: 3px solid #444444;
+            border-radius: 15px;
+            padding: 20px;
+            display: inline-block;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+        }
+        
+        .logo-main {
+            font-size: 1.8em;
+            font-weight: 900;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            letter-spacing: 3px;
+            margin: 0;
+        }
+        
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            color: #ffffff;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+        
+        .day-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        
+        .day-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #cccccc;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .day-btn.active {
+            background: #333333;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .phase-container {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .phase-container.active {
+            display: block;
+        }
+        
+        .phase-title {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #ffffff;
+            font-weight: bold;
+        }
+        
+        .timer {
+            text-align: center;
+            font-size: 3.5em;
+            font-weight: 900;
+            margin: 20px 0;
+            color: #FFD700;
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .exercise-list {
+            margin-bottom: 20px;
+        }
+        
+        .exercise-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border-left: 4px solid #666666;
+        }
+        
+        .exercise-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #ffffff;
+        }
+        
+        .exercise-reps {
+            font-size: 0.9em;
+            color: #cccccc;
+        }
+        
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+            color: white;
+        }
+        
+        .btn-start {
+            background: #333333;
+        }
+        
+        .btn-pause {
+            background: #666666;
+        }
+        
+        .btn-stop {
+            background: #555555;
+        }
+        
+        .btn-next {
+            background: #444444;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+        
+        .current-exercise {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #666666;
+        }
+        
+        .phase-info {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #cccccc;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+                margin: 5px;
+            }
+            
+            .timer {
+                font-size: 2.8em;
+            }
+            
+            .btn {
+                padding: 10px 15px;
+                font-size: 0.8em;
+            }
+            
+            .logo-container img {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <img src="logo-desgraciaos.png" alt="DESGRACIAOS" />
+            </div>
+            <h1>RUTINA DESGRACIAOS</h1>
+            <p style="color: #cccccc;">45 min • 3 días/semana</p>
+        </div>
+        
+        <div class="day-selector">
+            <button class="day-btn active" data-day="1">Día 1</button>
+            <button class="day-btn" data-day="2">Día 2</button>
+            <button class="day-btn" data-day="3">Día 3</button>
+        </div>
+        
+        <div class="phase-container active" id="day-selection">
+            <div class="phase-title">Selecciona tu día de entrenamiento</div>
+            <div class="exercise-list" id="routine-preview">
+                <!-- Se llenará dinámicamente -->
+            </div>
+            <div class="control-buttons">
+                <button class="btn btn-start" onclick="startWorkout()">🚀 Comenzar Rutina</button>
+            </div>
+        </div>
+        
+        <div class="phase-container" id="workout-phase">
+            <div class="phase-info">
+                <div class="phase-title" id="phase-title">Calentamiento</div>
+                <div>Fase <span id="phase-number">1</span> de 5</div>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            
+            <div class="timer" id="timer">05:00</div>
+            
+            <div class="current-exercise" id="current-exercise">
+                <div class="exercise-name">Prepárate para comenzar</div>
+            </div>
+            
+            <div class="exercise-list" id="exercise-list">
+                <!-- Se llenará dinámicamente -->
+            </div>
+            
+            <div class="control-buttons">
+                <button class="btn btn-pause" id="pause-btn" onclick="pauseTimer()">⏸️ Pausar</button>
+                <button class="btn btn-next" onclick="nextPhase()">⏭️ Siguiente</button>
+                <button class="btn btn-stop" onclick="stopWorkout()">⏹️ Parar</button>
+            </div>
+        </div>
+        
+        <div class="phase-container" id="completed-phase">
+            <div class="phase-title">🎉 ¡Rutina Completada!</div>
+            <div style="text-align: center; padding: 30px;">
+                <p style="font-size: 1.2em; margin-bottom: 20px;">¡Excelente trabajo! Has completado tu rutina de 45 minutos.</p>
+                <div class="control-buttons">
+                    <button class="btn btn-start" onclick="resetWorkout()">🔄 Nueva Rutina</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const routines = {
+            1: {
+                name: "Día 1 - Pecho, Tríceps, Hombros DESGRACIAOS",
+                phases: [
+                    {
+                        name: "Calentamiento",
+                        duration: 300,
+                        exercises: ["5 min de bicicleta estática o cinta de correr"]
+                    },
+                    {
+                        name: "Movilidad",
+                        duration: 300,
+                        exercises: ["Flexiones", "Sentadillas", "Salto de cuerda", "Rodillas al pecho", "Talones a glúteos"]
+                    },
+                    {
+                        name: "Bloque 1",
+                        duration: 480,
+                        exercises: [
+                            "Dorsal al pecho - 14-12-10-8-6",
+                            "Tríceps con cuerda - 14-12-10-8-6", 
+                            "Apertura de pecho máquina - 14-12-10-8-6",
+                            "Tocar hombro - 30 reps"
+                        ]
+                    },
+                    {
+                        name: "Bloque 2", 
+                        duration: 480,
+                        exercises: [
+                            "Aperturas hombro mancuerna - 14-12-10-8-6",
+                            "Femoral en máquina - 14-12-10-8-6",
+                            "Cuádriceps máquina - 14-12-10-8-6", 
+                            "Plancha + extensión pierna - 30 reps"
+                        ]
+                    },
+                    {
+                        name: "Bloque 3",
+                        duration: 480,
+                        exercises: [
+                            "Pectoral inclinado mancuerna - 14-12-10-8-6",
+                            "Bíceps con barra - 14-12-10-8-6",
+                            "Sentadillas sumo TRX - 14-12-10-8-6",
+                            "Remo - 12 calorías"
+                        ]
+                    }
+                ]
+            },
+            2: {
+                name: "Día 2 - Espalda, Bíceps, Piernas DESGRACIAOS",
+                phases: [
+                    {
+                        name: "Calentamiento",
+                        duration: 300,
+                        exercises: ["5 min de elíptica o remo suave"]
+                    },
+                    {
+                        name: "Movilidad",
+                        duration: 300,
+                        exercises: ["Círculos de brazos", "Zancadas", "Jumping jacks", "Rotaciones de cadera", "Estiramientos dinámicos"]
+                    },
+                    {
+                        name: "Bloque 1",
+                        duration: 480,
+                        exercises: [
+                            "Remo con barra - 12-10-8-6-4",
+                            "Curl bíceps mancuernas - 15-12-10-8",
+                            "Press pecho máquina - 15-12-10-8",
+                            "Mountain climbers - 40 reps"
+                        ]
+                    },
+                    {
+                        name: "Bloque 2",
+                        duration: 480,
+                        exercises: [
+                            "Jalones dorsales - 15-12-10-8",
+                            "Extensiones cuádriceps - 20-15-12-10",
+                            "Press hombros - 12-10-8-6",
+                            "Burpees - 15 reps"
+                        ]
+                    },
+                    {
+                        name: "Bloque 3", 
+                        duration: 480,
+                        exercises: [
+                            "Peso muerto - 10-8-6-4",
+                            "Martillo bíceps - 15-12-10-8",
+                            "Sentadillas goblet - 20-15-12-10",
+                            "Assault bike - 15 calorías"
+                        ]
+                    }
+                ]
+            },
+            3: {
+                name: "Día 3 - Piernas, Core, Cardio DESGRACIAOS",
+                phases: [
+                    {
+                        name: "Calentamiento",
+                        duration: 300,
+                        exercises: ["5 min de bici + movilidad articular"]
+                    },
+                    {
+                        name: "Movilidad",
+                        duration: 300,
+                        exercises: ["Sentadillas libres", "Estocadas", "Patadas glúteo", "Elevaciones rodillas", "Activación glúteo"]
+                    },
+                    {
+                        name: "Bloque 1",
+                        duration: 480,
+                        exercises: [
+                            "Prensa piernas - 20-18-15-12",
+                            "Curl femoral - 15-12-10-8",
+                            "Elevaciones laterales - 15-12-10-8",
+                            "Plancha abdominal - 45 segundos"
+                        ]
+                    },
+                    {
+                        name: "Bloque 2",
+                        duration: 480,
+                        exercises: [
+                            "Zancadas con mancuernas - 12x12-10x10-8x8",
+                            "Extensión gemelos - 20-18-15-12",
+                            "Tríceps banco - 15-12-10-8",
+                            "Russian twists - 30 reps"
+                        ]
+                    },
+                    {
+                        name: "Bloque 3",
+                        duration: 480,
+                        exercises: [
+                            "Hip thrust - 20-15-12-10",
+                            "Curl concentrado - 12-10-8-6",
+                            "Fondos paralelas - max-max-max",
+                            "Ski erg - 20 calorías"
+                        ]
+                    }
+                ]
+            }
+        };
+
+        let currentDay = 1;
+        let currentPhase = 0;
+        let timeRemaining = 0;
+        let timerInterval = null;
+        let isPaused = false;
+        let totalDuration = 0;
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            showRoutinePreview();
+            setupDayButtons();
+        });
+
+        function setupDayButtons() {
+            document.querySelectorAll('.day-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentDay = parseInt(this.dataset.day);
+                    showRoutinePreview();
+                });
+            });
+        }
+
+        function showRoutinePreview() {
+            const routine = routines[currentDay];
+            const preview = document.getElementById('routine-preview');
+            
+            let html = `<div class="exercise-item">
+                <div class="exercise-name">${routine.name}</div>
+                <div class="exercise-reps">Duración total: 45 minutos</div>
+            </div>`;
+            
+            routine.phases.forEach((phase, index) => {
+                html += `<div class="exercise-item">
+                    <div class="exercise-name">${phase.name} (${phase.duration / 60} min)</div>
+                    <div class="exercise-reps">${phase.exercises.join(' • ')}</div>
+                </div>`;
+            });
+            
+            preview.innerHTML = html;
+        }
+
+        function startWorkout() {
+            document.getElementById('day-selection').classList.remove('active');
+            document.getElementById('workout-phase').classList.add('active');
+            currentPhase = 0;
+            startPhase();
+        }
+
+        function startPhase() {
+            const routine = routines[currentDay];
+            const phase = routine.phases[currentPhase];
+            
+            document.getElementById('phase-title').textContent = phase.name;
+            document.getElementById('phase-number').textContent = currentPhase + 1;
+            
+            timeRemaining = phase.duration;
+            totalDuration = phase.duration;
+            
+            updateDisplay();
+            showExercises();
+            
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            if (!isPaused && timeRemaining > 0) {
+                timeRemaining--;
+                updateDisplay();
+                
+                if (timeRemaining === 0) {
+                    clearInterval(timerInterval);
+                    setTimeout(() => {
+                        if (currentPhase < routines[currentDay].phases.length - 1) {
+                            nextPhase();
+                        } else {
+                            completeWorkout();
+                        }
+                    }, 1000);
+                }
+            }
+        }
+
+        function updateDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            const progress = ((totalDuration - timeRemaining) / totalDuration) * 100;
+            document.getElementById('progress-fill').style.width = `${progress}%`;
+        }
+
+        function showExercises() {
+            const routine = routines[currentDay];
+            const phase = routine.phases[currentPhase];
+            const exerciseList = document.getElementById('exercise-list');
+            const currentExercise = document.getElementById('current-exercise');
+            
+            currentExercise.innerHTML = `
+                <div class="exercise-name">${phase.name}</div>
+                <div class="exercise-reps">${phase.duration / 60} minutos</div>
+            `;
+            
+            let html = '';
+            phase.exercises.forEach(exercise => {
+                html += `<div class="exercise-item">
+                    <div class="exercise-name">${exercise}</div>
+                </div>`;
+            });
+            
+            exerciseList.innerHTML = html;
+        }
+
+        function pauseTimer() {
+            isPaused = !isPaused;
+            const pauseBtn = document.getElementById('pause-btn');
+            if (isPaused) {
+                pauseBtn.innerHTML = '▶️ Reanudar';
+                pauseBtn.className = 'btn btn-start';
+            } else {
+                pauseBtn.innerHTML = '⏸️ Pausar';
+                pauseBtn.className = 'btn btn-pause';
+            }
+        }
+
+        function nextPhase() {
+            if (currentPhase < routines[currentDay].phases.length - 1) {
+                currentPhase++;
+                startPhase();
+            } else {
+                completeWorkout();
+            }
+        }
+
+        function completeWorkout() {
+            clearInterval(timerInterval);
+            document.getElementById('workout-phase').classList.remove('active');
+            document.getElementById('completed-phase').classList.add('active');
+        }
+
+        function stopWorkout() {
+            if (confirm('¿Estás seguro de que quieres parar la rutina?')) {
+                clearInterval(timerInterval);
+                resetWorkout();
+            }
+        }
+
+        function resetWorkout() {
+            clearInterval(timerInterval);
+            currentPhase = 0;
+            timeRemaining = 0;
+            isPaused = false;
+            
+            document.getElementById('workout-phase').classList.remove('active');
+            document.getElementById('completed-phase').classList.remove('active');
+            document.getElementById('day-selection').classList.add('active');
+            
+            const pauseBtn = document.getElementById('pause-btn');
+            pauseBtn.innerHTML = '⏸️ Pausar';
+            pauseBtn.className = 'btn btn-pause';
+            
+            showRoutinePreview();
+        }
+    </script>
+</body>
+</html>
